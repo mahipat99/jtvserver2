@@ -121,6 +121,7 @@ create_shortcut() {
 # Function to create autoboot
 create_autoboot() {
     echo "${CYAN}Setting up autoboot...${NC}"
+    mkdir -p ~/.termux/boot  # Create directory if not exists
     echo "termux-wake-lock" > .termux/boot/auto-start.sh
     echo "echo \"server is running on port 3500 in background\"" >> .termux/boot/auto-start.sh
     echo "echo \"open http://localhost:3500/ to setup\"" >> .termux/boot/auto-start.sh
@@ -149,7 +150,7 @@ login() {
 update_script() {
     # Delete the existing script and suppress warning
     rm setup.sh 2>/dev/null
-    curl -o setup.sh https://gist.githubusercontent.com/mahipat99/a9e704a544568c1d68fd5c284a58cb02/raw/
+    curl -o setup.sh https://raw.githubusercontent.com/mahipat99/jtvserver2/main/setup.sh
     chmod +x setup.sh  # Make sure the script is executable
     echo "${YELLOW}Script updated.${NC}"
 }
