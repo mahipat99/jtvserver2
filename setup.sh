@@ -58,7 +58,7 @@ get_choice() {
     read -p "$prompt" user_choice
 
     # Validate user input
-    if [[ ! "$user_choice" =~ ^[$valid_options]$ ]]; then
+    if ! echo "$valid_options" | grep -q "$user_choice"; then
         echo "${RED}Invalid choice. Please enter a valid option.${NC}"
         get_choice "$prompt" "$valid_options"
     fi
@@ -66,28 +66,22 @@ get_choice() {
     echo "$user_choice"
 }
 
-
-
-# Function to create a shortcut
 create_shortcut() {
     # Create directory if not exists
-    mkdir -p /data/data/com.termux/files/home/.shortcuts
-    chmod 700 -R /data/data/com.termux/files/home/.shortcuts  # Ensure correct permissions
-
-    # Create icons directory
-    mkdir -p /data/data/com.termux/files/home/.shortcuts/icons
-    chmod -R a-x,u=rwX,go-rwx /data/data/com.termux/files/home/.shortcuts/icons
+    mkdir -p ~/.shortcuts{,/icons}
+    chmod 700 -R ~/.shortcuts
+    chmod -R a-x,u=rwX,go-rwx ~/.shortcuts/icons
 
     echo "${CYAN}Select shortcut option:${NC}"
-    echo "1 - ${GREEN}Launch Shortcut${NC}"
-    echo "2 - ${CYAN}Setup Shortcut${NC}"
+    echo "1 - ${GREEN}Launch${NC}"
+    echo "2 - ${CYAN}Setup${NC}"
 
-    local shortcut_choice=$(get_choice "Enter your choice (1 or 2): " "1-2")
+    shortcut_choice=$(get_choice "Enter your choice (1 or 2): " "1-2")
 
     case $shortcut_choice in
         1)
             # Delete the existing script and suppress warning
-            rm /data/data/com.termux/files/home/.shortcuts/launch_shortcut.sh 2>/dev/null
+            rm ~/.shortcuts/launch_shortcut.sh 2>/dev/null
             echo "${CYAN}Creating Launch Shortcut...${NC}"
             echo "termux-wake-lock" > ~/.shortcuts/launch_shortcut.sh
             echo "echo \"server is running on port 3500 in background\"" >> ~/.shortcuts/launch_shortcut.sh
@@ -96,20 +90,18 @@ create_shortcut() {
             echo "sh start.sh" >> ~/.shortcuts/launch_shortcut.sh
             echo "${GREEN}Launch Shortcut created.${NC}"
 
-            # Download icon for Launch Shortcut
-            curl -o /data/data/com.termux/files/home/.shortcuts/icons/launch_shortcut.sh.png \
+            curl -o ~/.shortcuts/icons/launch_shortcut.sh.png \
                 https://raw.githubusercontent.com/mahipat99/jtvserver2/main/launch_shortcut.sh.png
             ;;
         2)
             # Delete the existing script and suppress warning
-            rm /data/data/com.termux/files/home/.shortcuts/setup_shortcut.sh 2>/dev/null
+            rm ~/.shortcuts/setup_shortcut.sh 2>/dev/null
             echo "${CYAN}Creating Setup Shortcut...${NC}"
-            echo "cd ~" >  ~/.shortcuts/setup_shortcut.sh
+            echo "cd ~" > ~/.shortcuts/setup_shortcut.sh
             echo "sh setup.sh" >> ~/.shortcuts/setup_shortcut.sh
             echo "${CYAN}Setup Shortcut created.${NC}"
 
-            # Download icon for Setup Shortcut
-            curl -o /data/data/com.termux/files/home/.shortcuts/icons/setup_shortcut.sh.png \
+            curl -o ~/.shortcuts/icons/setup_shortcut.sh.png \
                 https://raw.githubusercontent.com/mahipat99/jtvserver2/main/setup_shortcut.sh.png
             ;;
         *)
@@ -192,3 +184,4 @@ case $choice in
     8) update_script ;;
     *) echo "${RED}Invalid choice. Exiting.${NC}" ;;
 esac
+
