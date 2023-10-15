@@ -37,7 +37,7 @@ install() {
 # Function to update JTVServer
 update() {
     rm JTVServer -rf
-    wget -N "$jtv_server_zip_url" && unzip -qq JTVServer.zip && rm JTVServer.zip
+    wget -N "$jtv_server_zip_url" && unzip -qq JTVServer.zip > /dev/null 2>&1 && rm JTVServer.zip
     curl -o start.sh "$start_sh_url"
     echo "${YELLOW}Update completed.${NC}"
 }
