@@ -22,7 +22,8 @@ NC='\033[0m' # No Color
 # Function to get device IP address
 get_device_ip() {
     ip_address=$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-    echo "$ip_address"}
+    echo "$ip_address"
+}
 
 # Function to install dependencies and setup JTVServer
 install() {
