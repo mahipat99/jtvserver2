@@ -183,4 +183,3 @@ case $choice in
     8) update_script ;;
     *) echo "${RED}Invalid choice. Exiting.${NC}" ;;
 esac
-
