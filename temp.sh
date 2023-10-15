@@ -58,7 +58,7 @@ get_choice() {
     read -p "$prompt" user_choice
 
     # Validate user input
-    if [[ ! "$user_choice" =~ ^[$valid_options]$ ]]; then
+    if ! echo "$valid_options" | grep -q "$user_choice"; then
         echo "${RED}Invalid choice. Please enter a valid option.${NC}"
         get_choice "$prompt" "$valid_options"
     fi
@@ -67,33 +67,46 @@ get_choice() {
 }
 
 create_shortcut() {
-    shortcuts_dir="/data/data/com.termux/files/home/.shortcuts"
-    icons_dir="$shortcuts_dir/icons"
-
-    mkdir -p "$shortcuts_dir" "$icons_dir"
-    chmod -R 700 "$shortcuts_dir" && chmod -R a-x,u=rwX,go-rwx "$icons_dir"
+    # Create directory if not exists
+    mkdir -p ~/.shortcuts{,/icons}
+    chmod 700 -R ~/.shortcuts
+    chmod -R a-x,u=rwX,go-rwx ~/.shortcuts/icons
 
     echo "${CYAN}Select shortcut option:${NC}"
-    echo "1 - ${GREEN}Launch Shortcut${NC}"
-    echo "2 - ${CYAN}Setup Shortcut${NC}"
+    echo "1 - ${GREEN}Launch${NC}"
+    echo "2 - ${CYAN}Setup${NC}"
 
-    choice=$(get_choice "Enter your choice (1 or 2): " "1-2")
+    shortcut_choice=$(get_choice "Enter your choice (1 or 2): " "1-2")
 
-    script_name="launch_shortcut.sh"
-    script_content="termux-wake-lock\necho \"server is running on port 3500 in background\"\necho \"open http://localhost:3500/ to setup\"\ncd ~\nsh start.sh"
+    case $shortcut_choice in
+        1)
+            # Delete the existing script and suppress warning
+            rm ~/.shortcuts/launch_shortcut.sh 2>/dev/null
+            echo "${CYAN}Creating Launch Shortcut...${NC}"
+            echo "termux-wake-lock" > ~/.shortcuts/launch_shortcut.sh
+            echo "echo \"server is running on port 3500 in background\"" >> ~/.shortcuts/launch_shortcut.sh
+            echo "echo \"open http://localhost:3500/ to setup\"" >> ~/.shortcuts/launch_shortcut.sh
+            echo "cd ~" >> ~/.shortcuts/launch_shortcut.sh
+            echo "sh start.sh" >> ~/.shortcuts/launch_shortcut.sh
+            echo "${GREEN}Launch Shortcut created.${NC}"
 
-    case $choice in
-        1) create_script "$shortcuts_dir/$script_name" "$script_content"
-           download_icon "$icons_dir/$script_name.png" "https://raw.githubusercontent.com/mahipat99/jtvserver2/main/$script_name.png"
-           echo "${GREEN}Launch Shortcut created.${NC}"
-           ;;
+            curl -o ~/.shortcuts/icons/launch_shortcut.sh.png \
+                https://raw.githubusercontent.com/mahipat99/jtvserver2/main/launch_shortcut.sh.png
+            ;;
+        2)
+            # Delete the existing script and suppress warning
+            rm ~/.shortcuts/setup_shortcut.sh 2>/dev/null
+            echo "${CYAN}Creating Setup Shortcut...${NC}"
+            echo "cd ~" > ~/.shortcuts/setup_shortcut.sh
+            echo "sh setup.sh" >> ~/.shortcuts/setup_shortcut.sh
+            echo "${CYAN}Setup Shortcut created.${NC}"
 
-        2) create_script "$shortcuts_dir/setup_shortcut.sh" "cd ~\nsh setup.sh"
-           download_icon "$icons_dir/setup_shortcut.sh.png" "https://raw.githubusercontent.com/mahipat99/jtvserver2/main/setup_shortcut.sh.png"
-           echo "${CYAN}Setup Shortcut created.${NC}"
-           ;;
-
-        *) echo "${RED}Invalid choice. Exiting.${NC}" ;;
+            curl -o ~/.shortcuts/icons/setup_shortcut.sh.png \
+                https://raw.githubusercontent.com/mahipat99/jtvserver2/main/setup_shortcut.sh.png
+            ;;
+        *)
+            echo "${RED}Invalid choice. Exiting.${NC}"
+            ;;
     esac
 }
 
