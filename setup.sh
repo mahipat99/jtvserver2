@@ -21,7 +21,6 @@ NC='\033[0m' # No Color
 
 # Function to get device IP address
 get_device_ip() {
-    # Use ifconfig to fetch the IP address (assuming wlan0 interface)
     ip_address=$(ifconfig wlan0 | awk '/inet /{print $2}')
     echo "$ip_address"
 }
@@ -29,8 +28,8 @@ get_device_ip() {
 # Function to install dependencies and setup JTVServer
 install() {
     apt update && apt upgrade -y
-    echo "Y" | pkg install nodejs-lts wget 
-    wget "$jtv_server_zip_url" -N && unzip JTVServer.zip && rm JTVServer.zip
+    pkg install -y nodejs-lts wget 
+    wget -N "$jtv_server_zip_url" && unzip -qq JTVServer.zip && rm JTVServer.zip
     curl -o start.sh "$start_sh_url"
     echo "${GREEN}Installation completed.${NC}"
 }
@@ -38,7 +37,7 @@ install() {
 # Function to update JTVServer
 update() {
     rm JTVServer -rf
-    wget "$jtv_server_zip_url" -N && unzip JTVServer.zip && rm JTVServer.zip
+    wget -N "$jtv_server_zip_url" && unzip -qq JTVServer.zip > /dev/null 2>&1 && rm JTVServer.zip
     curl -o start.sh "$start_sh_url"
     echo "${YELLOW}Update completed.${NC}"
 }
