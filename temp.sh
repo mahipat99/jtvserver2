@@ -29,7 +29,7 @@ get_device_ip() {
 install() {
     apt update && apt upgrade -y
     pkg install -y nodejs-lts wget 
-    wget -N "$jtv_server_zip_url" && unzip -q JTVServer.zip && rm JTVServer.zip
+    wget -N "$jtv_server_zip_url" && unzip -qq JTVServer.zip && rm JTVServer.zip
     curl -o start.sh "$start_sh_url"
     echo "${GREEN}Installation completed.${NC}"
 }
