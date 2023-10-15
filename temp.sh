@@ -129,7 +129,7 @@ login() {
 update_script() {
     # Delete the existing script and suppress warning
     rm setup.sh 2>/dev/null
-    curl -o setup.sh https://raw.githubusercontent.com/mahipat99/jtvserver2/main/setup.sh
+    curl -o setup.sh https://raw.githubusercontent.com/mahipat99/jtvserver2/main/temp.sh
     chmod +x setup.sh  # Make sure the script is executable
     echo "${YELLOW}Script updated.${NC}"
 }
