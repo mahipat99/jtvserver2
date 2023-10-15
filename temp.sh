@@ -21,7 +21,7 @@ NC='\033[0m' # No Color
 
 # Function to get device IP address
 get_device_ip() {
-    ip_address=$(arp -i wlan0 | awk 'NR==2 {print $1}')
+    ip_address=$(route -n | awk '$1 == "0.0.0.0" {print $2}')
     echo "$ip_address"
 }
 
