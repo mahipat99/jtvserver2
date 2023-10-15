@@ -28,8 +28,8 @@ get_device_ip() {
 # Function to install dependencies and setup JTVServer
 install() {
     apt update && apt upgrade -y
-    echo "Y" | pkg install nodejs-lts wget 
-    wget "$jtv_server_zip_url" -N && unzip JTVServer.zip && rm JTVServer.zip
+    pkg install -y nodejs-lts wget 
+    wget -N "$jtv_server_zip_url" && unzip -q JTVServer.zip && rm JTVServer.zip
     curl -o start.sh "$start_sh_url"
     echo "${GREEN}Installation completed.${NC}"
 }
