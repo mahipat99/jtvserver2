@@ -68,9 +68,9 @@ get_choice() {
 
 create_shortcut() {
     # Create directory if not exists
-    mkdir -p ~/.shortcuts{,/icons}
+    mkdir -p ~/.shortcuts ~/.shortcuts/icons
     chmod 700 -R ~/.shortcuts
-    chmod -R a-x,u=rwX,go-rwx ~/.shortcuts/icons
+    chmod -R u=rwX,go-rwx ~/.shortcuts/icons
 
     echo "${CYAN}Select shortcut option:${NC}"
     echo "1 - ${GREEN}Launch${NC}"
@@ -184,4 +184,3 @@ case $choice in
     8) update_script ;;
     *) echo "${RED}Invalid choice. Exiting.${NC}" ;;
 esac
-
