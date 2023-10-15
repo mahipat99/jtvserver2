@@ -21,8 +21,7 @@ NC='\033[0m' # No Color
 
 # Function to get device IP address
 get_device_ip() {
-    # Use ifconfig to fetch the LAN IP address (assuming wlan0 interface)
-    ip_address=$(ifconfig wlan0 | awk '/inet /{print $2}')
+    ip_address=$(arp -i wlan0 | awk 'NR==2 {print $1}')
     echo "$ip_address"
 }
 
