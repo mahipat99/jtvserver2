@@ -21,7 +21,8 @@ NC='\033[0m' # No Color
 
 # Function to get device IP address
 get_device_ip() {
-    ip_address=$(ifconfig wlan0 | awk '/inet /{print $2}')
+    # ip_address=$(ifconfig wlan0 | awk '/inet /{print $2}')
+    ip_address=$(ifconfig 2> /dev/null | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '192\.168\.[0-9]+\.[0-9]+')
     echo "$ip_address"
 }
 
